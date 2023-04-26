@@ -75,6 +75,8 @@ def merge_sort(arrays, merge_func):
 
 def k_merge_heap(arrays, heap, result):
     if(len(arrays) == 0):
+        for i in range(len(heap.heap)):
+            result.append(heap.remove_element(0))
         return
     smallest = heap.remove_element(0)
     for i in arrays:
