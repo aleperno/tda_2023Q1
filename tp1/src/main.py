@@ -84,6 +84,7 @@ def k_merge_heap(arrays, heap, result):
             i.pop(0)
             if(len(i) > 0):
                 heap.insert_element(i[0])
+            break
     arrays = [element for element in arrays if element != []]
     result.append(smallest)
     return k_merge_heap(arrays, heap, result)
