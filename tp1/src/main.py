@@ -27,6 +27,7 @@ Analisis de Complejidad
 """
 import random
 import itertools
+from heap import Heap
 
 
 K = 4
@@ -72,10 +73,39 @@ def merge_sort(arrays, merge_func):
     return merge_func(sorted_left, sorted_right)
 
 
+def k_merge_heap(arrays, heap, result):
+    if(len(arrays) == 0):
+        return
+    smallest = heap.remove_element(0)
+    for i in arrays:
+        if(i[0] == smallest):
+            i.pop(0)
+            if(len(i) > 0):
+                heap.insert_element(i[0])
+    arrays = [element for element in arrays if element != []]
+    result.append(smallest)
+    return k_merge_heap(arrays, heap, result)
+
+
+def heap_sort(listas):
+    arrays = [list(sublist) for sublist in listas]
+    result = []
+    if(len(arrays) == 1):
+        return arrays
+    heap = Heap()
+    for i in arrays:
+        heap.insert_element(i[0])
+        continue
+    k_merge_heap(arrays, heap, result)
+    return result
+
+
 def main():
     result = merge_sort(LISTAS, k_merge)
+    result_heap = heap_sort(LISTAS)
     expected = list(sorted(itertools.chain(*LISTAS)))
 
     assert result == expected
+    assert result_heap == expected
 
 main()
