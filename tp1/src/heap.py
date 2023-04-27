@@ -36,3 +36,33 @@ class Heap():
         for idx in range((self.size // 2) -1, -1, -1):
             self.heapify(idx)
         return removed_element
+
+
+def k_merge_heap(arrays, heap, result):
+    if(len(arrays) == 0):
+        for i in range(len(heap.heap)):
+            result.append(heap.remove_element(0))
+        return
+    smallest = heap.remove_element(0)
+    for i in arrays:
+        if(i[0] == smallest):
+            i.pop(0)
+            if(len(i) > 0):
+                heap.insert_element(i[0])
+            break
+    arrays = [element for element in arrays if element != []]
+    result.append(smallest)
+    return k_merge_heap(arrays, heap, result)
+
+
+def heap_sort(listas):
+    arrays = [list(sublist) for sublist in listas]
+    result = []
+    if(len(arrays) == 1):
+        return arrays
+    heap = Heap()
+    for i in arrays:
+        heap.insert_element(i[0])
+        continue
+    k_merge_heap(arrays, heap, result)
+    return result
