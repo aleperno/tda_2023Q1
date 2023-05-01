@@ -20,3 +20,14 @@ def create_bribes(products):
 
 def create_products():
     return [Product(random.randint(0, MAX_TYPES), random.randint(1, MAX_QTY)) for i in range(MAX_PACKAGES)]
+
+
+def products_map(products):
+    available_products = {}
+    for prod in products:
+        if(prod.prod_type in available_products):
+            available_products[prod.prod_type].append(prod)
+        else:
+            available_products[prod.prod_type] = [prod]
+            
+    return available_products
