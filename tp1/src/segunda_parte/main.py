@@ -51,9 +51,9 @@ def greddy_alternative(products, asked_bribe):
     return [bribes, to_keep]
 
 
-def payments_grid(products, bribes):
-    max_qty = max(list(map(lambda x: x.qty, products)) + [bribes[0].qty])
-    table = [[bribes[0].qty for x in range(max_qty + 1)] for x in range(len(products) + 1)] 
+def payments_grid(products, bribe):
+    max_qty = max(list(map(lambda x: x.qty, products)) + [bribe.qty])
+    table = [[bribe.qty for x in range(max_qty + 1)] for x in range(len(products) + 1)] 
     for row in range(len(products)+1):
         for column in range(max_qty + 1):
             if(row == 0 or column == 0):
@@ -64,17 +64,34 @@ def payments_grid(products, bribes):
                 table[row][column] = table[row-1][column]
     return table
 
-def dynamic_programming(products, bribes, ):
+def dynamic_programming(products, bribes):
     """
     Ecuación de Recurrencia:
         OPT(n, bribe.qty) = MIN
             - No usar el producto: OPT(n-1, bribe.qty)
             - Usar el producto: OPT(n-1, bribe.qty - pj.qty) + pj.qty
     """
-    table = payments_grid(products, bribes)
-
-def recurr_pay_bribe()
-
+    available_products = products_map(products)
+    for prod in available_products:
+        available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=True)
+    
+    all_bribes = {}
+    for bribe in bribes:
+        type_products = available_products[bribe.prod_type]
+        table = payments_grid(type_products, bribe)
+        all_bribes[bribe.prod_type] = recurr_pay_bribe(table, len(type_products), bribe.qty, type_products)
+    return all_bribes
+        
+def recurr_pay_bribe(table, product_idx, bribe_idx, products):
+    if(product_idx == 0):
+        return []
+    "No se uso el producto"    
+    if(table[product_idx-1][bribe_idx] == table[product_idx][bribe_idx]):
+        return recurr_pay_bribe(table, product_idx -1, bribe_idx, products)
+    else:
+        "Uso el producto para pagar el soborno"
+        product = products[product_idx-1]
+        return [product] + recurr_pay_bribe(table, product_idx -1, products[product_idx-1].qty, products)
 
 if __name__ == '__main__':
 
