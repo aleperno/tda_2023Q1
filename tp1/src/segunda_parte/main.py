@@ -20,7 +20,7 @@ def greedy_algorithm(products, asked_bribe):
     return [bribes, to_keep]
 
 
-def dynamic_algorithm(products, asked_bribe):
+def greddy_alternative(products, asked_bribe):
     available_products = products_map(products)
     for prod in available_products:
         available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=True)
@@ -51,6 +51,30 @@ def dynamic_algorithm(products, asked_bribe):
     return [bribes, to_keep]
 
 
+def payments_grid(products, bribes):
+    max_qty = max(list(map(lambda x: x.qty, products)) + [bribes[0].qty])
+    table = [[bribes[0].qty for x in range(max_qty + 1)] for x in range(len(products) + 1)] 
+    for row in range(len(products)+1):
+        for column in range(max_qty + 1):
+            if(row == 0 or column == 0):
+                continue
+            elif(column >= products[row-1].qty):
+                table[row][column] = min(table[row-1][column-products[row-1].qty] - products[row-1].qty, table[row-1][column])
+            else:
+                table[row][column] = table[row-1][column]
+    return table
+
+def dynamic_programming(products, bribes, ):
+    """
+    Ecuación de Recurrencia:
+        OPT(n, bribe.qty) = MIN
+            - No usar el producto: OPT(n-1, bribe.qty)
+            - Usar el producto: OPT(n-1, bribe.qty - pj.qty) + pj.qty
+    """
+    table = payments_grid(products, bribes)
+
+def recurr_pay_bribe()
+
 
 if __name__ == '__main__':
 
@@ -70,7 +94,7 @@ if __name__ == '__main__':
     [print(remain) for remain in remaining]
 
     print("\nDYNAMIC")
-    bribes, remaining = dynamic_algorithm(products, asked_bribe)
+    bribes, remaining = greddy_alternative(products, asked_bribe)
     print("\nDelerivered as bribe")
     [print(bribe) for bribe in bribes]
     print("\nTo be Kept:\n")
