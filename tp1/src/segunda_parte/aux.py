@@ -2,7 +2,7 @@ import random
 from functools import reduce
 from clases import Bribe, Product
 
-MAX_QTY = 12
+MAX_QTY = 500
 MAX_PACKAGES = 10
 MAX_TYPES = 3
 

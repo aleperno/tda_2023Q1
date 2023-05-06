@@ -7,12 +7,13 @@ def greedy_algorithm(products, asked_bribe):
     for prod in available_products:
         available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=False)
 
-    bribes = []
+    bribes = {}
     for bribe in asked_bribe:
         bribed = 0
+        bribes[bribe.prod_type] = []
         for product in available_products[bribe.prod_type]:
             if(bribed < bribe.qty):
-                bribes.append(product)
+                bribes[bribe.prod_type].append(product)
                 bribed += product.qty
 
     return bribes
@@ -62,6 +63,7 @@ def payments_grid(products, bribe):
                 table[row][column] = table[row-1][column]
     return table
 
+
 def recurr_pay_bribe(table, product_idx, bribe_idx, products):
     if(product_idx == 0):
         return []
@@ -72,6 +74,7 @@ def recurr_pay_bribe(table, product_idx, bribe_idx, products):
         "Uso el producto para pagar el soborno"
         product = products[product_idx-1]
         return [product] + recurr_pay_bribe(table, product_idx -1, bribe_idx - products[product_idx-1].qty, products)
+
 
 def dynamic_programming(products, bribes):
     """
@@ -84,9 +87,8 @@ def dynamic_programming(products, bribes):
     for prod in available_products:
         available_products[prod] = list(sorted(available_products[prod], key=lambda x: x.qty, reverse=True))
     
-    all_bribes = []
+    all_bribes = {}
     for bribe in bribes:
-        print(f"bribe: {bribe.prod_type} - qty: {bribe.qty}")
         type_products = available_products[bribe.prod_type]
         table = payments_grid(type_products, bribe)
         
@@ -96,7 +98,7 @@ def dynamic_programming(products, bribes):
                 best_match = idx
                 break
         product_bribes = recurr_pay_bribe(table, len(type_products), best_match, type_products)
-        all_bribes += product_bribes
+        all_bribes[bribe.prod_type] = product_bribes
     return all_bribes
         
 
@@ -113,10 +115,14 @@ if __name__ == '__main__':
     print("\nGREEDY")
     bribes = greedy_algorithm(products, asked_bribe)
     print("\nDelerivered as bribe")
-    [print(bribe) for bribe in bribes]
+    for prod_type,bribes in bribes.items():
+        total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
+        print(f"product type: {prod_type} delivered: {total} packages")
 
     print("\nDYNAMIC")
     bribes = dynamic_programming(products, asked_bribe)
     print("\nDelerivered as bribe")
-    [print(bribe) for bribe in bribes]
+    for prod_type,bribes in bribes.items():
+        total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
+        print(f"product type: {prod_type} delivered: {total} packages")
 
