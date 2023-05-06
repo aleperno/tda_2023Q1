@@ -117,12 +117,12 @@ if __name__ == '__main__':
     print("\nDelerivered as bribe")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
-        print(f"product type: {prod_type} delivered: {total} packages")
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
 
     print("\nDYNAMIC")
     bribes = dynamic_programming(products, asked_bribe)
     print("\nDelerivered as bribe")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
-        print(f"product type: {prod_type} delivered: {total} packages")
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
 
