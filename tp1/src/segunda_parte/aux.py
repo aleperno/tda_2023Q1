@@ -2,9 +2,9 @@ import random
 from functools import reduce
 from clases import Bribe, Product
 
-MAX_QTY = 500
-MAX_PACKAGES = 10
-MAX_TYPES = 3
+MAX_QTY = 10
+MAX_PACKAGES = 100
+MAX_TYPES = 30
 
 def create_bribes(products):
     bribes = []

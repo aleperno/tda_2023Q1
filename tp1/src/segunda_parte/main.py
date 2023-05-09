@@ -13,10 +13,11 @@ def greedy_algorithm(products, asked_bribe):
         bribed = 0
         bribes[bribe.prod_type] = []
         for product in available_products[bribe.prod_type]:
-            if(bribed < bribe.qty):
+            if(bribed + product.qty <= bribe.qty):
                 bribes[bribe.prod_type].append(product)
                 bribed += product.qty
-
+            if bribed == bribe.qty:
+                break
     return bribes
 
 
@@ -39,7 +40,7 @@ def greddy_alternative(products, asked_bribe):
                     bribes.append(product)
                     bribed -= product.qty
             else:
-                relation_w_remain = bribed/remain_qty
+                relation_w_remain = bribed/remain_qty   
                 if(relation_w_remain > 1):
                     bribes.append(product)
                     bribed -= product.qty
@@ -52,8 +53,7 @@ def greddy_alternative(products, asked_bribe):
 
 def payments_grid(products, bribe):
     max_prod = reduce(lambda acum, prod: acum + prod.qty, products, 0)
-    table_size = max(max_prod, bribe.qty)
-    table = [[bribe.qty for x in range(table_size + 1)] for x in range(len(products) + 1)] 
+    table = [[bribe.qty for x in range(max_prod + 1)] for x in range(len(products) + 1)] 
     for row in range(len(products)+1):
         for column in range(max_prod + 1):
             if(row == 0 or column == 0):
