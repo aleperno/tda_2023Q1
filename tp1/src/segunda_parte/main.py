@@ -13,7 +13,7 @@ def greedy_algorithm(products, asked_bribe):
         bribed = 0
         bribes[bribe.prod_type] = []
         for product in available_products[bribe.prod_type]:
-            if(bribed + product.qty <= bribe.qty):
+            if(bribed <= bribe.qty):
                 bribes[bribe.prod_type].append(product)
                 bribed += product.qty
             if bribed == bribe.qty:
@@ -26,27 +26,27 @@ def greddy_alternative(products, asked_bribe):
     for prod in available_products:
         available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=True)
 
-    bribes = []
+    bribes = {}
     for bribe in asked_bribe:
         bribed = bribe.qty
+        bribes[bribe.prod_type] = []
         total_packages = reduce(lambda acum, prod: acum + prod.qty, available_products[bribe.prod_type], 0)
         for product in available_products[bribe.prod_type]:
-            remain_qty = total_packages - product.qty
+            total_packages = total_packages - product.qty
 
-            if(remain_qty == 0):
+            if(total_packages == 0):
                 if(bribed <= 0):
                     continue
                 else:
-                    bribes.append(product)
+                    bribes[bribe.prod_type].append(product)
                     bribed -= product.qty
             else:
-                relation_w_remain = bribed/remain_qty   
+                relation_w_remain = bribed/total_packages   
                 if(relation_w_remain > 1):
-                    bribes.append(product)
+                    bribes[bribe.prod_type].append(product)
                     bribed -= product.qty
                 else:
                     continue
-            total_packages -= product.qty
 
     return bribes
 
@@ -122,6 +122,14 @@ if __name__ == '__main__':
 
     print("\nGREEDY")
     bribes, res_time = measure_time(greedy_algorithm, products, asked_bribe)
+    print(f"\nDelerivered as bribe, in {res_time}")
+    for prod_type,bribes in bribes.items():
+        total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
+
+
+    print("\nGREEDY ALT")
+    bribes, res_time = measure_time(greddy_alternative, products, asked_bribe)
     print(f"\nDelerivered as bribe, in {res_time}")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
