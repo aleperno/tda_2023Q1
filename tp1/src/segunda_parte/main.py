@@ -1,12 +1,10 @@
-import time
 from functools import reduce
-from copy import deepcopy
-from aux import create_bribes, create_products, products_map
+from aux import create_bribes, create_products, products_map,measure_time
 
 def greedy_algorithm(products, asked_bribe):
     available_products = products_map(products)
     for prod in available_products:
-        available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=False)
+        available_products[prod] = sorted(available_products[prod], key=lambda x: x.qty, reverse=True)
 
     bribes = {}
     for bribe in asked_bribe:
@@ -17,6 +15,8 @@ def greedy_algorithm(products, asked_bribe):
                 bribes[bribe.prod_type].append(product)
                 bribed += product.qty
             if bribed == bribe.qty:
+                break
+            if(bribed <= 0):
                 break
     return bribes
 
@@ -103,13 +103,6 @@ def dynamic_programming(products, bribes):
     return all_bribes
         
 
-def measure_time(test_func, bribes, products):
-    start = time.process_time()
-    result = test_func(bribes, products)
-    end = time.process_time()
-    return result, end-start
-
-
 if __name__ == '__main__':
 
     products = create_products()
@@ -125,7 +118,8 @@ if __name__ == '__main__':
     print(f"\nDelerivered as bribe, in {res_time}")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
-        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
+        a = ",".join(list(map(lambda x: str(x.qty), bribes)))
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units {a}")
 
 
     print("\nGREEDY ALT")
@@ -133,12 +127,15 @@ if __name__ == '__main__':
     print(f"\nDelerivered as bribe, in {res_time}")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
-        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
+        a = ",".join(list(map(lambda x: str(x.qty), bribes)))
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units {a}")
+        
 
     print("\nDYNAMIC")
     bribes, res_time = measure_time(dynamic_programming, products, asked_bribe)
     print(f"\nDelerivered as bribe, in {res_time}")
     for prod_type,bribes in bribes.items():
         total = reduce(lambda acum, prod: acum + prod.qty, bribes, 0)
-        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units")
+        a = ",".join(list(map(lambda x: str(x.qty), bribes)))
+        print(f"product type: {prod_type} delivered: {total} packages in {len(bribes)} units {a}")
 
