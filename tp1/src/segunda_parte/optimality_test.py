@@ -1,10 +1,10 @@
 from aux import prepare_scenarios, measure_time
 from functools import reduce
-from main import greedy_algorithm, greddy_alternative, dynamic_programming
+from algorithms import greedy_algorithm, greddy_alternative, dynamic_programming
 
-a = prepare_scenarios('test_cases.csv')
+test_scenarios = prepare_scenarios('test_cases.csv')
 
-for scenario, cases in a.items():
+for scenario, cases in test_scenarios.items():
     products = cases['packages']
     asked_bribe = cases['bribe']
     

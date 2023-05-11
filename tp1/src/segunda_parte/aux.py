@@ -9,11 +9,11 @@ MAX_QTY = 20
 MAX_PACKAGES = 5
 MAX_TYPES = 1
 
-def create_bribes(products):
+def create_bribes(products, max_types = MAX_TYPES):
     bribes = []
-    for i in range(0, MAX_TYPES + 1):
-        if(random.random() > 0.7):
-            continue
+    for i in range(1, max_types + 1):
+        # if(random.random() > 0.7):
+        #     continue
         product_types = list(filter(lambda prod: prod.prod_type == i, products))
         if(product_types == []):
             continue
@@ -21,8 +21,8 @@ def create_bribes(products):
         bribes.append(Bribe(i, random.randint(1, in_stock)))
     return bribes
 
-def create_products():
-    return [Product(random.randint(0, MAX_TYPES), random.randint(1, MAX_QTY)) for i in range(MAX_PACKAGES)]
+def create_products(max_types=MAX_TYPES, max_qty=MAX_QTY, max_packages=MAX_PACKAGES):
+    return [Product(random.randint(1, max_types), random.randint(1, max_qty)) for i in range(max_packages)]
 
 
 def products_map(products):
