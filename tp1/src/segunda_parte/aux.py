@@ -7,7 +7,7 @@ import time
 
 MAX_QTY = 20
 MAX_PACKAGES = 5
-MAX_TYPES = 1
+MAX_TYPES = 2
 
 def create_bribes(products, max_types = MAX_TYPES):
     bribes = []

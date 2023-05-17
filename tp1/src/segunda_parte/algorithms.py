@@ -85,8 +85,8 @@ def dynamic_programming(products, bribes):
             - Usar el producto: OPT(n-1, bribe.qty - pj.qty) + pj.qty
     """
     available_products = products_map(products)
-    for prod in available_products:
-        available_products[prod] = list(sorted(available_products[prod], key=lambda x: x.qty, reverse=True))
+    # for prod in available_products:
+    #     available_products[prod] = list(sorted(available_products[prod], key=lambda x: x.qty, reverse=True))
     
     all_bribes = {}
     for bribe in bribes:
@@ -99,5 +99,32 @@ def dynamic_programming(products, bribes):
                 best_match = idx
                 break
         product_bribes = recurr_pay_bribe(table, len(type_products), best_match, type_products)
+        all_bribes[bribe.prod_type] = product_bribes
+    return all_bribes
+
+
+def dynamic_programming_iterative(products, bribes):
+    available_products = products_map(products)
+    all_bribes = {}
+
+    for bribe in bribes:
+        type_products = available_products[bribe.prod_type]
+        table = payments_grid(type_products, bribe)
+
+        best_match = -1
+        for idx,diff in enumerate(table[len(type_products)]):
+            if(diff <= 0):
+                best_match = idx
+                break
+        product_bribes = []
+        for product_idx in range(len(type_products), -1, -1):
+            if(product_idx == 0):
+                break
+            if(table[product_idx-1][best_match] == table[product_idx][best_match]):
+                continue
+            else:
+                product = type_products[product_idx-1]
+                product_bribes.append(product)
+                best_match -= product.qty
         all_bribes[bribe.prod_type] = product_bribes
     return all_bribes
