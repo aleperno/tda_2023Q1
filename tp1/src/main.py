@@ -20,8 +20,6 @@ Complexity Analysis
 
  T(n) = O(n * log(k))
 
-#TODO Terminar
-
 """
 import random
 import itertools
@@ -50,13 +48,11 @@ def perform_time_test(test_func, dataset, pre=None, post=None):
 
 
 def main():
-    #dataset = [deque([14, 36, 66, 75, 82]), deque([27, 51, 59, 71, 72])]
     dataset = create_test_dataset()
     print("Testing Merge Sort")
     result, res_time, ops = perform_time_test(merge_sort, dataset)
     print(f"Merge Sort lasted {res_time} and did {ops} ops")
 
-    #result_heap = heap_sort(LISTAS)
     print("Testing Heap Sort")
     result_heaps, res_time, ops = perform_time_test(heap_sort, dataset)
     print(f"Heap Sort lasted {res_time} and did {ops} ops")
