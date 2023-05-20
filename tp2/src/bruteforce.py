@@ -5,6 +5,24 @@ from copy import deepcopy
 
 
 def smartpack(items):
+    """
+    Performs a 'smart' packing approximation
+
+     - Sorts the items in descending order
+     - Start with a pack, inserting elements from left to right (from 'heavier' to 'lighter')
+     - If the current leftmost item doesn't fit the pack, we start inspecting elements from right to left
+       (from lighter to heavier).
+     - If the rightmost (lightest) item fits the pack, insert it and continue; if not close it and start a new pack
+       with the leftmost item.
+
+    Time Complexity Analysis
+     - Sorting: O(N * log(N))
+     - Packing: O(N)
+
+     Overall: O(N * log(N))
+    """
+
+    # Sorting and Setup Stage
     new_items = deque(sorted(items, reverse=True))
     aux = deepcopy(new_items)
     packages = []
@@ -12,6 +30,7 @@ def smartpack(items):
     package = []
     package_size = 0
 
+    # Packing Stage
     while new_items:
         l = new_items.popleft()
         if package_size + l <= 1:
@@ -34,12 +53,25 @@ def smartpack(items):
 
 
 def pack(items):
+    """
+    Packs a given set of items
+
+    Uses the following logic
+        - Open a pack and insert an item
+        - While items fix in the pack, insert them
+        - If an item doesn't fit, close the pack, open a new one and continue the same operation
+          until all items are packed
+
+    Returns the set of packs
+
+    This operation is O(n) where n is the ammout of items.
+    """
     packages = []
 
     package = []
     package_size = 0
 
-    for item in items:
+    for item in items:  # O(N)
         if package_size + item <= 1:
             # If it fits...I sits.
             package_size += item
@@ -56,11 +88,24 @@ def pack(items):
 
 
 def bruteforce(items):
+    """
+    Bruteforces the pack approximation
+
+    The `pack` methods uses an approximation which its solution quality heavily relies
+    in the dataset order. We can assert for for any given collection of items, there's a specific
+    order of those elements which the `pack` approximation gives the optimal solution.
+
+    Therefore the bruteforce uses ALL possible permutations of a given set to feed the method, and records which
+    result is best
+
+    For a set of N elements, there are N! (factorial(n)) permutations, all of size N and no repetitions.
+    """
     permutated_items = permutations(items)
     current_solution = None
     current_value = 0
 
     for item_set in permutated_items:
+        #print('foo')
         new_result = pack(item_set)
         new_value = len(new_result)
         if not current_solution or new_value < current_value:
@@ -70,30 +115,23 @@ def bruteforce(items):
     return current_solution
 
 
+def main():
+    while True:
+        #data = generate_random_data(4)
+        data = [0.99, 0.1]
+        optimo = bruteforce(data)
+        n_optimo = len(optimo)
+        aprox = pack(data)
+        n_aprox = len(aprox)
 
-#print(bruteforce([0.4, 0.8, 0.5, 0.1, 0.7, 0.6, 0.1, 0.4, 0.2, 0.2]))
-#data = [0.11, 0.9, 0.11, 0.9, 0.11, 0.9]
-#data = generate_random_data(10)
-data = [0.8, 0.59, 0.98, 0.8, 0.0, 0.89, 0.63, 0.87, 0.31, 0.92]
+        relacion = n_aprox / n_optimo
+        print(f"La relacion es {relacion}")
+        if relacion > 2:
+            print(data)
+            break
 
-#print(pack(data))
-#print(bruteforce(data))
-#print(smartpack(data))
-
-
-while True:
-    #data = generate_random_data(4)
-    data = [0.99, 0.1, 0.99, 0.1, 0.99, 0.1, 0.99, 0.1, 0.99, 0.1, 0.99, 0.1]
-    optimo = bruteforce(data)
-    n_optimo = len(optimo)
-    aprox = pack(data)
-    n_aprox = len(aprox)
-
-    relacion = n_aprox / n_optimo
-    print(f"La relacion es {relacion}")
-    if relacion > 2:
-        print(data)
         break
 
-    break
 
+if __name__ == '__main__':
+    main()
