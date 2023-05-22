@@ -1,7 +1,14 @@
 from itertools import permutations
 from collections import deque
-from data import generate_random_data
 from copy import deepcopy
+
+
+def sumfloat(x, y, decimals=4):
+    """
+    Sums two floats, taking into account a maximum of decimals in order to avoid
+    floating point errors
+    """
+    return round(x + y, decimals)
 
 
 def smartpack(items):
@@ -33,15 +40,17 @@ def smartpack(items):
     # Packing Stage
     while new_items:
         l = new_items.popleft()
-        if package_size + l <= 1:
-            package_size += l
+
+        new_size = sumfloat(package_size, l)
+        if new_size <= 1:
+            package_size = new_size
             package.append(l)
             continue
         else:
             # Must check if the rightmost item fits
-            while new_items and new_items[-1] + package_size <= 1:
+            while new_items and sumfloat(new_items[-1], package_size) <= 1:
                 r = new_items.pop()
-                package_size += r
+                package_size = sumfloat(package_size, r)
                 package.append(r)
 
             packages.append(package)
@@ -72,9 +81,10 @@ def pack(items):
     package_size = 0
 
     for item in items:  # O(N)
-        if package_size + item <= 1:
+        new_size = sumfloat(package_size, item)
+        if new_size <= 1:
             # If it fits...I sits.
-            package_size += item
+            package_size = new_size
             package.append(item)
         else:
             # Need new package
@@ -105,7 +115,6 @@ def bruteforce(items):
     current_value = 0
 
     for item_set in permutated_items:
-        #print('foo')
         new_result = pack(item_set)
         new_value = len(new_result)
         if not current_solution or new_value < current_value:
@@ -116,22 +125,7 @@ def bruteforce(items):
 
 
 def main():
-    while True:
-        #data = generate_random_data(4)
-        data = [0.99, 0.1]
-        optimo = bruteforce(data)
-        n_optimo = len(optimo)
-        aprox = pack(data)
-        n_aprox = len(aprox)
-
-        relacion = n_aprox / n_optimo
-        print(f"La relacion es {relacion}")
-        if relacion > 2:
-            print(data)
-            break
-
-        break
-
+    pass
 
 if __name__ == '__main__':
     main()
