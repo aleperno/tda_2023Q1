@@ -1,4 +1,5 @@
 import random
+from argparse import ArgumentParser, ArgumentTypeError
 
 
 def random_item(decimals=2):
@@ -42,3 +43,32 @@ def read_data_file(path):
         raise LengthMismatch()
 
     return data
+
+
+def check_pos_int(value):
+    try:
+        value = int(value)
+        if value <= 0:
+            raise ArgumentTypeError(f"{value} is not a positive integer")
+        else:
+            return value
+    except ValueError:
+        raise Exception(f"{value} not an integer")
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument('-n', '--number', type=check_pos_int, default=5, required=False)
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    data = generate_random_data(length=args.number)
+    print(f"{len(data)}\n")
+    for object in data:
+        print(object)
+
+
+if __name__ == '__main__':
+    main()
